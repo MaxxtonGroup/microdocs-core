@@ -5,13 +5,14 @@ node {
     stage('Checkout'){
         deleteDir()
         echo "Checkout git"
-        checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, submoduleCfg: [], userRemoteConfigs: [[url: 'git@github.com:MaxxtonGroup/microdocs-core.git']]])
+//        git url: 'git@github.com:MaxxtonGroup/microdocs-core.git', credentialsId: '144b99ed-c2b7-4be3-89ca-9803f98bb0e8'
+        checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/MaxxtonGroup/microdocs-core', branch: 'master']]])
         stash name: 'src'
     }
     stage('Build'){
         echo "Installing npm dependencies"
         unstash 'src'
-        newVersion = sh(returnStdout: true, script: 'npm version ').trim()
+        newVersion = sh(returnStdout: true, script: 'npm version ' + semver).trim()
         sh 'npm install'
         stash name: 'build'
     }
@@ -33,13 +34,11 @@ node {
         }
     }
 
-    stage('Git Tag'){
-        sh 'git add package.json'
-        sh 'git commit -a -m "release ' + projectName + ' ' + newVersion + '"'
-        sh 'git tag ' + projectName + '_' + newVersion
-        sh 'git push'
-        sh 'git push origin ' + projectName + '_' + newVersion
-    }
+//    stage('Git Tag'){
+//        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: '2cecab87-b4d7-47cd-9407-1239f9ee9a1c', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
+//            sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/MaxxtonGroup/microdocs-core --tags')
+//        }
+//    }
 
     stage('Publish'){
         dir('microdocs-core-ts/dist'){
