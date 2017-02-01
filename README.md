@@ -1,11 +1,18 @@
-# MicroDocs core Typescript
-Core functionaries used across other MicroDocs Typescript projects
+# MicroDocs Core library
+Core library used across other MicroDocs Typescript projects
 
-## Build
+## Development
+### Setup
 ```
-#init
 npm install
-npm link
-#build and watch
-gulp
+npm run link
+npm run watch
+```
+### Test
+```
+npm run test
+```
+### Build
+```
+npm run prepublish
 ```

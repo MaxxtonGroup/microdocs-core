@@ -10,7 +10,9 @@
   "license": "MIT",
   "scripts": {
     "test": "./node_modules/.bin/gulp test",
-    "prepublish": "./node_modules/.bin/gulp prepublish"
+    "prepublish": "./node_modules/.bin/gulp prepublish",
+    "watch": "./node_modules/.bin/gulp",
+    "link": "cd dist && npm link"
   },
   "dependencies": {},
   "devDependencies": {
