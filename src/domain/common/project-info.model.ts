@@ -11,7 +11,8 @@ export class ProjectInfo {
               public description?: string,
               public sourceLink?: string,
               public publishTime?:string,
-              public updateTime?:string) {
+              public updateTime?:string,
+              public color?:string) {
     this.setVersions(versions);
   }
 
@@ -59,7 +60,8 @@ export class ProjectInfo {
       links: this.links,
       sourceLink: this.sourceLink,
       publishTime: this.publishTime,
-      updateTime: this.updateTime
+      updateTime: this.updateTime,
+      color: this.color
     };
     return JSON.stringify(output);
   }

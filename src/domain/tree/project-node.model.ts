@@ -11,7 +11,8 @@ export class ProjectNode extends Node {
                public versions?:string[],
                public problems?:number,
                public reference?:string,
-               public tags?:string[] ) {
+               public tags?:string[],
+               public color?:string) {
     super();
   }
 
@@ -138,9 +139,9 @@ export class ProjectNode extends Node {
       };
     }
 
-    var dependencies:{[title:string]:{}} = {};
+    let dependencies:{[title:string]:{}} = {};
     this.dependencies.forEach( dependency => {
-      var child:any = {
+      let child:any = {
         item: dependency.item.unlink()
       };
       if ( dependency.problems ) {
@@ -152,7 +153,7 @@ export class ProjectNode extends Node {
       dependencies[ dependency.item.title ] = child;
     } );
 
-    var node:any = {};
+    let node:any = {};
     if ( Object.keys( dependencies ).length > 0 ) {
       node.dependencies = dependencies;
     }
@@ -171,11 +172,14 @@ export class ProjectNode extends Node {
     if ( this.tags != null || this.tags != undefined ) {
       node.tags = this.tags;
     }
+    if ( this.color != null || this.color != undefined ) {
+      node.color = this.color;
+    }
     return node;
   }
 
   public static link( unlinkedProject:any, title:string ):ProjectNode {
-    var project = new ProjectNode( title );
+    let project = new ProjectNode( title );
     if ( unlinkedProject.dependencies ) {
       for ( let key in unlinkedProject.dependencies ) {
         let unlinkedDependency = unlinkedProject.dependencies[ key ];
@@ -203,6 +207,9 @@ export class ProjectNode extends Node {
     }
     if ( unlinkedProject.tags ) {
       project.tags = unlinkedProject.tags;
+    }
+    if ( unlinkedProject.color ) {
+      project.color = unlinkedProject.color;
     }
     return project;
   }
