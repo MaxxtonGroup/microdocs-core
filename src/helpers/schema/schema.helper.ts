@@ -96,10 +96,13 @@ export class SchemaHelper {
       var fullSchema = schema;
       if (schema.allOf != undefined && schema.allOf != null) {
         schema.allOf.forEach(superSchema => {
-          if (superSchema != undefined && superSchema != null && superSchema.properties != null && superSchema.properties != undefined) {
-            for (var key in superSchema.properties) {
-              //todo: combine instead of override
-              fullSchema.properties[key] = SchemaHelper.collect(superSchema.properties[key], objectStack, rootObject);
+          if (superSchema){
+            superSchema = SchemaHelper.collect(superSchema, objectStack, rootObject);
+            if(superSchema.properties) {
+              for (var key in superSchema.properties) {
+                //todo: combine instead of override
+                fullSchema.properties[key] = superSchema.properties[key];
+              }
             }
           }
         });
