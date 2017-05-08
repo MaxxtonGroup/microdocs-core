@@ -2,6 +2,7 @@
 import {expect, assert} from 'chai';
 import {SchemaHelper} from "./schema.helper";
 import {SchemaTypes} from "../../domain";
+import {Schema} from "../../domain/schema/schema.model";
 
 describe('#SchemaHelper: ', () => {
   
@@ -121,6 +122,38 @@ describe('#SchemaHelper: ', () => {
       assert.deepEqual(result[7].expression, "name4");
     });
     
+  });
+
+  describe("#collect(): ", () => {
+
+    it("test collect inheritance", () => {
+      let schema:Schema = <Schema>{
+        type: SchemaTypes.OBJECT,
+        properties: {
+          distributionChannelId: {
+            type: SchemaTypes.INTEGER
+          }
+        },
+        allOf: [{
+          $ref: "#/ParentObject"
+        }]
+      };
+      let rootObject = {
+        ParentObject: {
+          type: SchemaTypes.OBJECT,
+          properties: {
+            parentId: {
+              type: SchemaTypes.INTEGER
+            }
+          }
+        }
+      };
+
+      let resolvedObject = SchemaHelper.collect(schema, [], rootObject);
+      assert.isTrue(resolvedObject.properties['distributionChannelId'] != undefined);
+      assert.isTrue(resolvedObject.properties['parentId'] != undefined);
+    });
+
   });
   
   describe("#resolveTypeString(): ", () => {
