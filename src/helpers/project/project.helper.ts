@@ -42,7 +42,7 @@ export function mergeProjects( projects: Project[], info: { title: string, descr
         mergedProject.definitions = {}
       }
       for(let definition in project.definitions){
-          mergedProject.definition[definition] = project.definitions[definition];
+          mergedProject.definitions[definition] = project.definitions[definition];
       }
     }
   });
