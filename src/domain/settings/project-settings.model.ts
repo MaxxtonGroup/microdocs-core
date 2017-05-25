@@ -11,4 +11,5 @@ export interface ProjectSettings{
 
 export interface Environments{
   default?:boolean;
+  postmanApiKey?:string;
 }

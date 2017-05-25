@@ -3,6 +3,7 @@ import {Method} from "../component/method.model";
 import {Parameter} from "./parameter.model";
 import {ResponseModel} from "./response.model";
 import { Problemable } from "../problem/problemable.model";
+import { Test } from "./test.model";
 
 export interface Path extends Problemable {
   path?:string;
@@ -19,4 +20,5 @@ export interface Path extends Problemable {
   responses?:{[key:string]:ResponseModel};
   deprecated?:boolean;
   security?:{};//todo: security
+  tests?:Test[];
 }

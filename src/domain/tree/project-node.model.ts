@@ -11,7 +11,8 @@ export class ProjectNode extends Node {
                public versions?:string[],
                public problems?:number,
                public reference?:string,
-               public tags?:string[] ) {
+               public tags?:string[],
+               public color?:string) {
     super();
   }
 
@@ -171,6 +172,9 @@ export class ProjectNode extends Node {
     if ( this.tags != null || this.tags != undefined ) {
       node.tags = this.tags;
     }
+    if ( this.color != null || this.color != undefined ) {
+      node.color = this.color;
+    }
     return node;
   }
 
@@ -203,6 +207,9 @@ export class ProjectNode extends Node {
     }
     if ( unlinkedProject.tags ) {
       project.tags = unlinkedProject.tags;
+    }
+    if ( unlinkedProject.color ) {
+      project.color = unlinkedProject.color;
     }
     return project;
   }
