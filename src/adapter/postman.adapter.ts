@@ -1,9 +1,21 @@
 import { Project, Schema, Path, ProjectInfo, ProjectTree, SchemaTypes, ParameterPlacings } from "../domain";
 import { BaseAdapter } from './base.adapter';
+import * as uuid from 'uuid';
 
-export abstract class PostmanAdapter implements BaseAdapter {
+export class PostmanAdapter implements BaseAdapter {
 
   adapt(project: Project): {}[] {
+    var collection: any;
+
+    collection.info.schema = "https://schema.getpostman.com/json/collection/v2.0.0/collection.json";
+    collection.info._postman_id = uuid['v4']();
+
+    collection['info'] = {
+      name: project.info.title,
+      version: project.info.version,
+      description: project.info.description
+    };
+
     var items: {}[] = [];
     if (project.paths != undefined) {
       for (var path in project.paths) {
@@ -13,14 +25,9 @@ export abstract class PostmanAdapter implements BaseAdapter {
         }
       }
     }
-    return items;
+    collection.item = items;
+    return collection;
   }
-
-  /**
-   * To be implemented by the client, since the implementation heavily
-   * depends on the project.
-   */
-  abstract getPostmanBase(project?: Project): {};
 
   getPostmanItem(path: string, method: string, endpoint: Path): {} {
     var url: string = "{{baseUrl}}" + path;
