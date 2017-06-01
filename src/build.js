@@ -184,6 +184,7 @@ function Builder(settings) {
       name: json.name,
       version: json.version,
       description: json.description,
+      bin: json.bin,
       typings: json.typings,
       main: json.main,
       repository: json.repository,
