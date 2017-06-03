@@ -14,7 +14,9 @@
     "watch": "./node_modules/.bin/gulp",
     "link": "cd dist && npm link"
   },
-  "dependencies": {},
+  "dependencies": {
+    "uuid": "^3.0.1"
+  },
   "devDependencies": {
     "@types/chai": "^3.4.34",
     "@types/jasmine": "^2.5.40",
