@@ -1,7 +1,7 @@
 'use strict';
 var gulp = require('gulp');
 var tscConfig = require('./src/tsconfig.json');
-var Builder = require('./src/build').Builder;
+var Builder = require('./build').Builder;
 
 var settings = {
   distFolder: 'dist',
@@ -11,6 +11,10 @@ var settings = {
 };
 
 var builder = new Builder(settings);
+
+gulp.task('watch', ['prepublish'], function (cb) {
+  builder.watch(cb);
+});
 
 gulp.task('default', ['prepublish'], function (cb) {
   builder.watch(cb);
