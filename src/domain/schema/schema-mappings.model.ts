@@ -5,6 +5,7 @@
 export interface SchemaMappings{
   json?:SchemaMapping;
   relational?:SchemaMapping;
+  downstreamCheck?:SchemaMapping;
 }
 
 export interface SchemaMapping{
