@@ -82,7 +82,10 @@ export class SchemaHelper {
     if (schema.$ref != undefined) {
       var result = SchemaHelper.resolveReference(schema.$ref, rootObject);
       if (result != null) {
-        schema = result;
+        for(let key in result){
+          schema[key] = result[key];
+        }
+        delete schema.$ref;
       }
     }
     if (schema.type == SchemaTypes.OBJECT) {
@@ -393,8 +396,8 @@ export class SchemaHelper {
               object[key] = refObject[key];
             }
           }
+          delete object['$ref'];
         }
-        delete object['$ref'];
       }
     }
     return object;
