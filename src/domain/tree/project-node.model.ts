@@ -139,9 +139,9 @@ export class ProjectNode extends Node {
       };
     }
 
-    var dependencies:{[title:string]:{}} = {};
+    let dependencies:{[title:string]:{}} = {};
     this.dependencies.forEach( dependency => {
-      var child:any = {
+      let child:any = {
         item: dependency.item.unlink()
       };
       if ( dependency.problems ) {
@@ -153,7 +153,7 @@ export class ProjectNode extends Node {
       dependencies[ dependency.item.title ] = child;
     } );
 
-    var node:any = {};
+    let node:any = {};
     if ( Object.keys( dependencies ).length > 0 ) {
       node.dependencies = dependencies;
     }
@@ -179,7 +179,7 @@ export class ProjectNode extends Node {
   }
 
   public static link( unlinkedProject:any, title:string ):ProjectNode {
-    var project = new ProjectNode( title );
+    let project = new ProjectNode( title );
     if ( unlinkedProject.dependencies ) {
       for ( let key in unlinkedProject.dependencies ) {
         let unlinkedDependency = unlinkedProject.dependencies[ key ];

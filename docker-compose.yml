@@ -1,0 +1,7 @@
+version: '3'
+services:
+  microdocs-core:
+    build: .
+    volumes:
+     - ./src:/app/@maxxton/microdocs-core/src:ro
+     - ./dist:/app/@maxxton/microdocs-core/dist

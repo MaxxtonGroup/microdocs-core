@@ -209,7 +209,7 @@ export class ProjectTree extends Node{
   public toFlatList():FlatList{
     let flatList = new FlatList();
     let includeProjects:string[] = [];
-    this._projects.forEach(projectNode => {
+    this._projects.filter(projectNode => projectNode.toFlatList && typeof(projectNode.toFlatList) === 'function').forEach(projectNode => {
       projectNode.toFlatList(false, flatList, includeProjects);
     });
     return <FlatList>flatList.filter(projectNode => includeProjects.filter(includeProject => projectNode.title === includeProject).length == 0);

@@ -1,6 +1,6 @@
 {
   "name": "@maxxton/microdocs-core",
-  "version": "1.7.0",
+  "version": "1.8.1",
   "description": "Shared code for the microdocs-server and microdocs-ui",
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
     "@types/chai": "^3.4.34",
     "@types/jasmine": "^2.5.40",
     "@types/node": "^7.0.0",
+    "@types/uuid": "^3.0.0",
     "async": "^2.0.1",
     "chai": "^3.5.0",
     "del": "^2.2.2",

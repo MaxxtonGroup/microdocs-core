@@ -22,7 +22,7 @@ function Builder(settings) {
     testPattern: 'dist/**/*.spec.js',
     tsConfig: {},
     src: ['src/**/*.ts', '!src/**/*.spec.ts', '!src/test/**'],
-    srcResources: ['package.json', 'LICENSE','README.md'],
+    srcResources: ['package.json', 'LICENSE', 'README.md'],
     test: ['src/**/*.spec.ts'],
     testResources: ['src/test/**']
   }, settings);
@@ -30,7 +30,7 @@ function Builder(settings) {
   /**
    * Cleans, moves, and compiles the code
    */
-  this.prepublish = function(cb) {
+  this.prepublish = function (cb) {
     async.series([
       function (next) {
         _clean(next);
@@ -45,7 +45,7 @@ function Builder(settings) {
   };
 
   function _clean(cb) {
-    gulp.src(settings.distFolder + '/*', { read: false })
+    gulp.src(settings.distFolder + '/*', {read: false})
         .pipe(vinylPaths(del))
         .on('error', gutil.log)
         .on('finish', function () {
@@ -95,7 +95,7 @@ function Builder(settings) {
     _compileTypescriptFromSrc(settings.src, false, cb);
   }
 
-  this.watch = function(cb) {
+  this.watch = function (cb) {
     gutil.log('Starting ', gutil.colors.cyan('_watch'));
     _watchTypescript(false);
     gulp.watch(settings.srcResources, _deployMisc);
@@ -103,7 +103,7 @@ function Builder(settings) {
     cb();
   };
 
-  this.watchTest = function(cb) {
+  this.watchTest = function (cb) {
     gutil.log('Starting ', gutil.colors.cyan('_watch'));
     _watchTypescript(false);
     gulp.watch(settings.srcResources, _deployMisc);
@@ -169,7 +169,7 @@ function Builder(settings) {
       tsResult.js.pipe(gulp.dest(isTest ? settings.distTestFolder : settings.distFolder))
     ]).on('finish', function () {
       gutil.log('Finished ', gutil.colors.cyan('_compileTypescriptFromSrc'));
-      if(cb && typeof(cb) === 'function') {
+      if (cb && typeof(cb) === 'function') {
         cb();
       }
     });
@@ -184,6 +184,7 @@ function Builder(settings) {
       name: json.name,
       version: json.version,
       description: json.description,
+      bin: json.bin,
       typings: json.typings,
       main: json.main,
       repository: json.repository,
@@ -209,11 +210,16 @@ function Builder(settings) {
     src.pipe(gulp.dest(settings.distFolder + '/'))
         .on('error', gutil.log)
         .on('finish', function () {
-          cb();
+          gulp.src("./.npmrc")
+              .pipe(gulp.dest(settings.distFolder))
+              .on('error', gutil.log)
+              .on('finish', function () {
+                cb();
+              });
         });
   }
 
-  this.test = function(cb) {
+  this.test = function (cb) {
     async.series([
       function (next) {
         _clean(next);
