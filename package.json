@@ -1,6 +1,6 @@
 {
   "name": "@maxxton/microdocs-core",
-  "version": "1.8.1",
+  "version": "1.8.2",
   "description": "Shared code for the microdocs-server and microdocs-ui",
   "repository": {
     "type": "git",
