@@ -12,7 +12,8 @@ export class ProjectInfo {
               public sourceLink?: string,
               public publishTime?:string,
               public updateTime?:string,
-              public color?:string) {
+              public color?:string,
+              public postmanCollection?:string) {
     this.setVersions(versions);
   }
 
@@ -61,8 +62,18 @@ export class ProjectInfo {
       sourceLink: this.sourceLink,
       publishTime: this.publishTime,
       updateTime: this.updateTime,
-      color: this.color
+      color: this.color,
+      postmanCollection: this.postmanCollection
     };
     return JSON.stringify(output);
+  }
+
+  public getLatestVersion(): ProjectInfo {
+    var sortedVersions = this.getVersions().sort();
+    return this.getVersion(sortedVersions[sortedVersions.length-1]);
+  }
+
+  public isLatestVersion(): boolean {
+    return this.version === this.getLatestVersion().version;
   }
 }

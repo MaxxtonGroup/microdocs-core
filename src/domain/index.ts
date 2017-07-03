@@ -17,6 +17,7 @@ export { Parameter } from './path/parameter.model';
 export { ResponseModel } from './path/response.model';
 export { ParameterPlacings } from './path/parameter-placing.model';
 export { RequestMethods } from './path/request-method.model';
+export { Test } from './path/test.model';
 
 export { Problem } from "./problem/problem.model";
 export { ProblemClient } from "./problem/problem-client.model";

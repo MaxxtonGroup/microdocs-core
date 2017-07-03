@@ -5,16 +5,16 @@ import * as uuid from 'uuid';
 export class PostmanAdapter implements BaseAdapter {
 
   adapt(project: Project): {}[] {
-    var collection: any;
+    var collection: any = {};
 
-    collection.info.schema = "https://schema.getpostman.com/json/collection/v2.0.0/collection.json";
-    collection.info._postman_id = uuid['v4']();
-
-    collection['info'] = {
+    collection.info = {
       name: project.info.title,
       version: project.info.version,
       description: project.info.description
     };
+
+    collection.info.schema = "https://schema.getpostman.com/json/collection/v2.0.0/collection.json";
+    collection.info._postman_id = uuid['v4']();
 
     var items: {}[] = [];
     if (project.paths != undefined) {
