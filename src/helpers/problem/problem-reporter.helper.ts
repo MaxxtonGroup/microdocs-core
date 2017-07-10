@@ -52,4 +52,8 @@ export class ProblemReporter {
     return this.problems;
   }
 
+  public getRootObject():any{
+    return this.rootObject;
+  }
+
 }

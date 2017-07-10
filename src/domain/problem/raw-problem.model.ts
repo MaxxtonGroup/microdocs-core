@@ -9,7 +9,7 @@ import { ProblemClient } from "./problem-client.model";
 export class RawProblem {
 
   private _level: string;
-  private message: string;
+  private _message: string;
   private rootObject: Project;
   private component: Component;
   private method: Method;
@@ -21,7 +21,7 @@ export class RawProblem {
 
   constructor( level: string, message: string, rootObject: Project, component?: Component, method?: Method, clientRootObject?: Project, clientTitle?: string, clientVersion?: string, clientComponent?: Component, clientMethod?: Method ) {
     this._level           = level;
-    this.message          = message;
+    this._message          = message;
     this.rootObject       = rootObject;
     this.component        = component;
     this.method           = method;
@@ -32,13 +32,21 @@ export class RawProblem {
     this.clientMethod     = clientMethod;
   }
 
+  get message(): string {
+    return this._message;
+  }
+
+  set message(value: string) {
+    this._message = value;
+  }
+
   get level(): string {
     return this._level;
   }
 
   get problem(): Problem {
     //console.warn(level + ": " + description);
-    var problem: Problem = { level: this._level, message: this.message };
+    var problem: Problem = { level: this._level, message: this._message };
 
     // log component info
     if ( this.component ) {
@@ -104,7 +112,7 @@ export class RawProblem {
   public inverse(clientRootObject:Project, clientComponent:Component, clientMethod?:Method): RawProblem {
     return new RawProblem(
         this.level,
-        this.message,
+        this._message,
         clientRootObject,
         clientComponent,
         clientMethod,

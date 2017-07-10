@@ -104,6 +104,14 @@ export class SchemaHelper {
           }
         });
       }
+      if (schema.anyOf != undefined && schema.anyOf != null) {
+        schema.anyOf = schema.anyOf.map(subSchema => {
+          if (subSchema) {
+            subSchema = SchemaHelper.collect(subSchema, objectStack, rootObject);
+          }
+          return subSchema;
+        });
+      }
       if (schema.properties != undefined && schema.properties != null) {
         for (var key in schema.properties) {
           //todo: combine instead of override
