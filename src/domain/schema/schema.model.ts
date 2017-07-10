@@ -29,6 +29,7 @@ export interface Schema {
   properties?: {[name: string]: Schema};
   additonalProperties?: Schema;
   allOf?: Schema[];
+  anyOf?: Schema[];
   name?: string;
   simpleName?: string;
   genericName?: string;
