@@ -216,6 +216,9 @@ export class ProjectNode extends Node {
 
   public toFlatList( excludeSelf:boolean = false, flatList:FlatList = new FlatList(), includeProject:string[] = [] ):FlatList {
     if(!excludeSelf) {
+      if(!flatList.addProject){
+        flatList.addProject = FlatList.prototype.addProject;
+      }
       flatList.addProject( this );
     }
     this.dependencies.forEach( dependencyNode => {
