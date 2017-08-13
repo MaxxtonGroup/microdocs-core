@@ -3,3 +3,4 @@
 /.npmignore
 /npm-debug.log
 /microdocs-core.iml
+*.js

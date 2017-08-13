@@ -1,6 +1,5 @@
 import { Project } from "../../domain/project.model";
-import { ProjectInfo } from "../../domain/common/project-info.model";
-import { Dependency } from "../../domain/dependency/dependency.model";
+import { ProjectInfoImpl } from "../../domain/common/project-info-impl.model";
 
 /**
  * Merge multiple project into one
@@ -11,7 +10,7 @@ import { Dependency } from "../../domain/dependency/dependency.model";
 export function mergeProjects(projects: Project[], info: { name: string, description: string, version: string, baseUrl: string }): Project {
   // setup merged project
   let mergedProject: Project = {
-    info: new ProjectInfo(info.name, undefined, info.version, [info.version], [], info.description)
+    info: new ProjectInfoImpl(info.name, undefined, info.version, [info.version], [], info.description)
   };
   if (info.baseUrl) {
     // this can be done better using regex

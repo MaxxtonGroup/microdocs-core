@@ -35,7 +35,7 @@ export { ProjectTree } from './tree/project-tree.model';
 export { DependencyNode } from './tree/dependency-node.model';
 export { FlatList } from './tree/flat-list.model';
 
-export { ProjectSettings, Environments } from './settings/project-settings.model';
+export { ProjectSettings, Environment } from './settings/project-settings.model';
 export { ProjectChangeRule } from './settings/project-change-rule.model';
 
 export { Event } from './events/event.model';

@@ -1,4 +1,3 @@
-/// <reference path="../../../typings/index.d.ts" />
 
 import { expect, assert } from 'chai';
 import { ProjectTree } from "./project-tree.model";

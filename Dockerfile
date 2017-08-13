@@ -1,13 +1,13 @@
-FROM node:6
+FROM node:8.1-alpine
 
 WORKDIR /app/@maxxton/microdocs-core
 
-# Install microdocs-server
-ADD ./package.json ./.npmrc ./
-RUN npm install
+# Install Dependencies
+ADD ./package.json ./
+RUN yarn setup && yarn cache clean
 
-# Build microdocs-server
+# Build
+ADD ./tsconfig.json ./tslint.json ./
 ADD ./src ./src
-ADD ./gulpfile.js ./build.js ./
-RUN ./node_modules/.bin/gulp prepublish
-CMD rm -rf /app/@maxxton/microdocs-core/dist/* && ./node_modules/.bin/gulp watch
+RUN yarn run compile && yarn run tslint
+CMD rm -rf /app/@maxxton/microdocs-core/dist/* && yarn run watch

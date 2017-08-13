@@ -1,15 +1,15 @@
+import { Project } from "../project.model";
 
-import {Project} from "../project.model";
-export interface ProjectSettings{
+export interface ProjectSettings {
 
-  global?:{[title:string]:Project};
-  environments?:{[title:string]:Project};
-  groups?:{[title:string]:Project};
-  projects?:{[title:string]:Project};
+  global?: { [title: string]: Project };
+  environments?: { [title: string]: Project };
+  groups?: { [title: string]: Project };
+  projects?: { [title: string]: Project };
 
 }
 
-export interface Environments{
-  default?:boolean;
-  postmanApiKey?:string;
+export interface Environment {
+  default?: boolean;
+  postmanApiKey?: string;
 }

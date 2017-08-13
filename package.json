@@ -9,31 +9,23 @@
   "author": "Steven Hermans (s.hermans@maxxton.com)",
   "license": "MIT",
   "scripts": {
-    "test": "./node_modules/.bin/gulp test",
-    "prepublish": "./node_modules/.bin/gulp prepublish",
-    "watch": "./node_modules/.bin/gulp",
-    "link": "cd dist && npm link"
+    "compile": "rm -rf dist && mkdir dist && cp package.json dist && tsc -p tsconfig.build.json",
+    "setup": "yarn --freeze-lockfile",
+    "lint": "tslint --project tsconfig.json",
+    "watch": "rm -rf dist && mkdir dist && cp package.json dist && tsc -p tsconfig.json -w",
+    "clean": "rm -rf dist",
+    "test": "rm -rf dist && mkdir dist && cp package.json dist && tsc -p tsconfig.json && mocha ./dist/**/*.spec.js"
   },
   "dependencies": {
     "uuid": "^3.0.1"
   },
   "devDependencies": {
-    "@types/chai": "^3.4.34",
-    "@types/jasmine": "^2.5.40",
-    "@types/node": "^7.0.0",
-    "@types/uuid": "^3.0.0",
-    "async": "^2.0.1",
-    "chai": "^3.5.0",
-    "del": "^2.2.2",
-    "gaze": "^1.1.2",
-    "gulp": "^3.9.0",
-    "gulp-html-extend": "^1.1.6",
-    "gulp-mocha": "^3.0.1",
-    "gulp-replace": "^0.5.4",
-    "gulp-typescript": "3.1.3",
-    "gulp-util": "^3.0.7",
-    "merge2": "^1.0.2",
-    "typescript": "^2.1.5",
-    "vinyl-paths": "^2.1.0"
+    "@types/chai": "^4.0.3",
+    "@types/mocha": "^2.2.41",
+    "@types/uuid": "^3.4.0",
+    "chai": "^4.1.1",
+    "mocha": "^3.5.0",
+    "tslint": "^5.6.0",
+    "typescript": "^2.4.2"
   }
 }
