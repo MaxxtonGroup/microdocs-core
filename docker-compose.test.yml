@@ -1,0 +1,10 @@
+version: '3'
+services:
+  microdocs-core:
+    build: .
+    command:
+     - yarn
+     - run
+     - test
+    volumes:
+     - ./src:/app/@maxxton/microdocs-core/src:ro

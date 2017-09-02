@@ -9,12 +9,12 @@
   "author": "Steven Hermans (s.hermans@maxxton.com)",
   "license": "MIT",
   "scripts": {
-    "compile": "rm -rf dist && mkdir dist && cp package.json dist && tsc -p tsconfig.build.json",
+    "compile": "rm -rf dist/* && (mkdir dist || true) && cp package.json dist && tsc -p tsconfig.build.json",
     "setup": "yarn --freeze-lockfile",
     "lint": "tslint --project tsconfig.json",
-    "watch": "rm -rf dist && mkdir dist && cp package.json dist && tsc -p tsconfig.json -w",
-    "clean": "rm -rf dist",
-    "test": "rm -rf dist && mkdir dist && cp package.json dist && tsc -p tsconfig.json && mocha ./dist/**/*.spec.js"
+    "watch": "rm -rf dist/* && (mkdir dist || true) && cp package.json dist && tsc -p tsconfig.json -w",
+    "clean": "rm -rf dist/*",
+    "test": "rm -rf dist/* && (mkdir dist || true) && cp package.json dist && tsc -p tsconfig.json && mocha ./dist/**/*.spec.js"
   },
   "dependencies": {
     "uuid": "^3.0.1"

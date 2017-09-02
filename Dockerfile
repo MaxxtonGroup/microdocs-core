@@ -7,7 +7,5 @@ ADD ./package.json ./
 RUN yarn setup && yarn cache clean
 
 # Build
-ADD ./tsconfig.json ./tslint.json ./
-ADD ./src ./src
-RUN yarn run compile && yarn run tslint
-CMD rm -rf /app/@maxxton/microdocs-core/dist/* && yarn run watch
+ADD ./tsconfig.json ./tsconfig.build.json ./tslint.json ./
+CMD ["yarn", "run", "watch"]
