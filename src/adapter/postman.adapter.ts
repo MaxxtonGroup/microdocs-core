@@ -9,7 +9,7 @@ export class PostmanAdapter implements BaseAdapter {
 
     collection.info = {
       name: project.info.title,
-      version: project.info.version,
+      version: project.info.tag,
       description: project.info.description
     };
 

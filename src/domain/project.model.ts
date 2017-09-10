@@ -5,7 +5,6 @@ import { ExternalDoc } from "./common/external-doc.model";
 import { Dependency } from "./dependency/dependency.model";
 import { Component } from "./component/component.model";
 import { Path } from "./path/path.model";
-import { Problem } from "./problem/problem.model";
 import { Exchange } from "./events/exchange.model";
 import { Deploy } from "./deploy/deploy.model";
 import { Problemable } from "./problem/problemable.model";
@@ -15,7 +14,7 @@ import { Problemable } from "./problem/problemable.model";
  */
 export interface Project extends Problemable{
   microdocs?:string;
-  swagger?:string;
+  id?:string;
   info?:ProjectInfo;
   host?:string;
   basePath?:string;

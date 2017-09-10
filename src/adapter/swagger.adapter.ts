@@ -35,7 +35,6 @@ export class SwaggerAdapter implements BaseAdapter {
   private convertEndpoint(path: Path) {
     delete path.controller;
     delete path.method;
-    delete path.problems;
     delete path.path;
     delete path.requestMethod;
     if (path.parameters != undefined) {

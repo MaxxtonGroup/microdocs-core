@@ -19,12 +19,8 @@ export { ParameterPlacings } from './path/parameter-placing.model';
 export { RequestMethods } from './path/request-method.model';
 export { Test } from './path/test.model';
 
-export { Problem } from "./problem/problem.model";
-export { ProblemClient } from "./problem/problem-client.model";
 export { Problemable } from "./problem/problemable.model";
-export { RawProblem } from "./problem/raw-problem.model";
-export { ProblemLevels } from './problem/problem-level.model';
-export { ProblemResponse } from './problem/problem-response.model';
+export { ProblemReport, Level, ProblemOptions, Problem, ProblemComponent } from "./problem/problem-report.model";
 
 export { Schema } from './schema/schema.model';
 export { SchemaTypes } from './schema/schema-type.model';
@@ -41,3 +37,5 @@ export { ProjectChangeRule } from './settings/project-change-rule.model';
 export { Event } from './events/event.model';
 export { Exchange } from './events/exchange.model';
 export { ExchangeTypes } from './events/exchange-types.model';
+
+export { ProjectMetadata, ProjectMetadataTag } from "./project-metadata.model";
