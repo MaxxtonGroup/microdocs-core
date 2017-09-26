@@ -5,7 +5,7 @@ import { ProjectNode } from "./project-node.model";
 export class FlatList extends Array<ProjectNode>{
 
   public addProject(projectNode:ProjectNode):void{
-    let results = this.filter(node => node.title === projectNode.title && node.version === projectNode.version);
+    let results = this.filter(node => node.title === projectNode.title && node.tag === projectNode.tag);
     if(results.length == 0){
       this.push(projectNode);
     }

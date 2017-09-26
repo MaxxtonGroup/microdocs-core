@@ -162,18 +162,18 @@ export class ProjectTree extends Node{
   }
 
   /**
-   * Find a reference for ProjectNode which match the title and version
+   * Find a reference for ProjectNode which match the title and tag
    * @param title {string} title of the node
-   * @param version {string} version of the node
+   * @param tag {string} tag of the node
    * @return {string} reference string, eg. '#/example-project/dependencies/item/child-project'
    */
-  public findNodePath(title:string, version:string):string {
+  public findNodePath(title:string, tag:string):string {
     for(var i = 0; i < this._projects.length; i++){
       var project = this._projects[i];
-      if (project.title === title && project.version === version) {
+      if (project.title === title && project.tag === tag) {
         return "/" + title;
       }
-      var path = project.findNodePath(title, version);
+      var path = project.findNodePath(title, tag);
       if (path) {
         return "/" + title + path;
       }

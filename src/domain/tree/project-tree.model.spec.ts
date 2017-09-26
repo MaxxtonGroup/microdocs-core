@@ -3,7 +3,7 @@ import { expect, assert } from 'chai';
 import { ProjectTree } from "./project-tree.model";
 import { ProjectNode } from "./project-node.model";
 import { DependencyNode } from "./dependency-node.model";
-import { DependencyTypes } from '../';
+import { DependencyTypes } from '../dependency/dependency-type.model';
 
 describe( '#ProjectTree: ', () => {
 

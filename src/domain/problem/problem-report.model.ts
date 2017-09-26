@@ -5,7 +5,7 @@ import { Method } from "../component/method.model";
 
 export class ProblemReport {
 
-  private problems: Problem[];
+  private problems: Problem[] = [];
 
   public getProblems():Problem[] {
     return this.problems;

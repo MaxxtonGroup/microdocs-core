@@ -1,4 +1,8 @@
-import { FlatList, Node, ProjectTree, DependencyNode, DependencyTypes } from "../";
+import { FlatList } from "./flat-list.model";
+import { Node } from "./node.model";
+import { ProjectTree } from "./project-tree.model";
+import { DependencyNode } from "./dependency-node.model";
+import { DependencyTypes } from "../dependency/dependency-type.model";
 
 export class ProjectNode extends Node {
 
@@ -7,11 +11,10 @@ export class ProjectNode extends Node {
   constructor( public title?:string,
                public parent:Node = null,
                public group?:string,
-               public version?:string,
-               public versions?:string[],
+               public tag?:string,
+               public tags?:string[],
                public problems?:number,
                public reference?:string,
-               public tags?:string[],
                public color?:string) {
     super();
   }
@@ -55,13 +58,13 @@ export class ProjectNode extends Node {
     }
   }
 
-  public findNodePath( title:string, version:string ):string {
+  public findNodePath( title:string, tag:string ):string {
     for ( var i = 0; i < this.dependencies.length; i++ ) {
       var dependency = this.dependencies[ i ];
-      if ( dependency.item.title === title && dependency.item.version === version ) {
+      if ( dependency.item.title === title && dependency.item.tag === tag ) {
         return title + "/item";
       }
-      var path = dependency.item.findNodePath( title, version );
+      var path = dependency.item.findNodePath( title, tag );
       if ( path != null ) {
         return title + '/item/dependencies/' + path;
       }
@@ -160,17 +163,14 @@ export class ProjectNode extends Node {
     if ( this.group != null || this.group != undefined ) {
       node.group = this.group;
     }
-    if ( this.version != null || this.version != undefined ) {
-      node.version = this.version;
-    }
-    if ( this.versions != null || this.versions != undefined ) {
-      node.versions = this.versions;
-    }
-    if ( this.problems != null || this.problems != undefined ) {
-      node.problems = this.problems;
+    if ( this.tag != null || this.tag != undefined ) {
+      node.tag = this.tag;
     }
     if ( this.tags != null || this.tags != undefined ) {
       node.tags = this.tags;
+    }
+    if ( this.problems != null || this.problems != undefined ) {
+      node.problems = this.problems;
     }
     if ( this.color != null || this.color != undefined ) {
       node.color = this.color;
@@ -193,20 +193,17 @@ export class ProjectNode extends Node {
     if ( unlinkedProject.group ) {
       project.group = unlinkedProject.group;
     }
-    if ( unlinkedProject.version ) {
-      project.version = unlinkedProject.version;
+    if ( unlinkedProject.tag ) {
+      project.tag = unlinkedProject.tag;
     }
-    if ( unlinkedProject.versions ) {
-      project.versions = unlinkedProject.versions;
+    if ( unlinkedProject.tags ) {
+      project.tags = unlinkedProject.tags;
     }
     if ( unlinkedProject.problems ) {
       project.problems = unlinkedProject.problems;
     }
     if ( unlinkedProject.$ref ) {
       project.reference = unlinkedProject.$ref;
-    }
-    if ( unlinkedProject.tags ) {
-      project.tags = unlinkedProject.tags;
     }
     if ( unlinkedProject.color ) {
       project.color = unlinkedProject.color;

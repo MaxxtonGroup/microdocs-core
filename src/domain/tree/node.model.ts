@@ -21,7 +21,7 @@ export abstract class Node{
    */
   public abstract getReference():string;
   
-  public abstract findNodePath(title:string, version:string):string;
+  public abstract findNodePath(title:string, tag:string):string;
   
   public abstract unlink():{};
 
