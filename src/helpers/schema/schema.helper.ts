@@ -80,10 +80,10 @@ export class SchemaHelper {
       return schema;
     }
     if (schema.$ref != undefined) {
-      let newSchema = SchemaHelper.resolveReference(schema.$ref, rootObject);
-      for(let key in newSchema){
-        schema[key] = newSchema[key];
-      }
+      // let newSchema = SchemaHelper.resolveReference(schema.$ref, rootObject);
+      // for(let key in newSchema){
+      //   schema[key] = newSchema[key];
+      // }
     }
     if (schema.type == SchemaTypes.OBJECT) {
       if (schema.name != undefined && schema.name != null) {
