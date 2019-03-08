@@ -45,16 +45,16 @@ export class PostmanAdapter implements BaseAdapter {
 
       // replace query params
       endpoint.parameters.filter(param => param.in == ParameterPlacings.QUERY).forEach(param => {
-        var generatedValue = '{{' + param.name + '}}';
+        var generatedValue = '{{' + encodeURIComponent(param.name) + '}}';
         if (param.default != undefined) {
-          generatedValue = param.default;
+          generatedValue = encodeURIComponent(param.default);
         }
         if (url.indexOf("?") == -1) {
           url += '?';
         } else {
           url += '&';
         }
-        url += encodeURIComponent(param.name) + '=' + encodeURIComponent(generatedValue);
+        url += encodeURIComponent(param.name) + '=' + generatedValue;
       });
 
       // add body
