@@ -1,5 +1,5 @@
 
-import { expect, assert } from 'chai';
+// import { expect, assert } from 'chai';
 import { Project } from "../domain/project.model";
 import { MicroDocsPreProcessor } from "./microdocs.pre-processor";
 
@@ -7,81 +7,81 @@ describe( '#MicroDocsPreProcessor: ', () => {
 
   describe( "#process(): ", () => {
 
-    it( "Test empty settings", () => {
-      var project:Project = <Project>{};
-      var settings        = {};
+    test( "Test empty settings", () => {
+      let project: Project = {} as Project;
+      let settings        = {};
 
-      var result = new MicroDocsPreProcessor().process( project, settings );
+      let result = new MicroDocsPreProcessor().process( project, settings );
 
-      expect( result ).to.deep.eq( {} );
+      expect( result ).toEqual( {} );
     } );
 
-    it( "Test static settings", () => {
-      var project:Project = <Project>{};
-      var settings        = { test: true };
+    test( "Test static settings", () => {
+      let project: Project = {} as Project;
+      let settings        = { test: true };
 
-      var result = new MicroDocsPreProcessor().process( project, settings );
+      let result = new MicroDocsPreProcessor().process( project, settings );
 
-      expect( result ).to.deep.eq( { test: true } );
+      expect( result ).toEqual( { test: true } );
     } );
 
-    it( "Test static nested settings", () => {
-      var project:Project = <Project>{};
-      var settings        = { obj: { test: true } };
+    test( "Test static nested settings", () => {
+      let project: Project = {} as Project;
+      let settings        = { obj: { test: true } };
 
-      var result = new MicroDocsPreProcessor().process( project, settings );
+      let result = new MicroDocsPreProcessor().process( project, settings );
 
-      expect( result ).to.deep.eq( { obj: { test: true } } );
+      expect( result ).toEqual( { obj: { test: true } } );
     } );
 
-    it( "Test static merge settings", () => {
-      var project:Project = <Project>{ obj: 'lalala' };
-      var settings        = { obj: { test: true } };
+    test( "Test static merge settings", () => {
+      let project: Project = { obj: 'lalala' } as Project;
+      let settings        = { obj: { test: true } };
 
-      var result = new MicroDocsPreProcessor().process( project, settings );
+      let result = new MicroDocsPreProcessor().process( project, settings );
 
-      expect( result ).to.deep.eq( { obj: { test: true } } );
+      expect( result ).toEqual( { obj: { test: true } } );
     } );
 
-    it( "Test static array", () => {
-      var project:Project = <Project>{ array: [] };
-      var settings        = { array: [ 'item', 'item' ] };
+    test( "Test static array", () => {
+      let project: Project = { array: [] } as Project;
+      let settings        = { array: [ 'item', 'item' ] };
 
-      var result = new MicroDocsPreProcessor().process( project, settings );
+      let result = new MicroDocsPreProcessor().process( project, settings );
 
-      expect( result ).to.deep.eq( { array: [ 'item', 'item' ] } );
+      expect( result ).toEqual( { array: [ 'item', 'item' ] } );
     } );
 
-    it( "Test variable injection", () => {
-      var project:Project = <Project>{ myvar: 'helloWorld' };
-      var settings        = { resolved: '$project.myvar' };
+    test( "Test variable injection", () => {
+      let project: Project = { myvar: 'helloWorld' } as Project;
+      let settings        = { resolved: '$project.myvar' };
 
-      var result = new MicroDocsPreProcessor().process( project, settings );
-      expect( result ).to.deep.eq( { myvar: 'helloWorld', resolved: 'helloWorld' } );
+      let result = new MicroDocsPreProcessor().process( project, settings );
+      expect( result ).toEqual( { myvar: 'helloWorld', resolved: 'helloWorld' } );
     } );
 
-    it( "Test missing variable injection", () => {
-      var project:Project = <Project>{ myvar: 'helloWorld' };
-      var settings        = { resolved: '$myvar' };
+    test( "Test missing variable injection", () => {
+      let project: Project = { myvar: 'helloWorld' } as Project;
+      let settings        = { resolved: '$myvar' };
 
-      var result = new MicroDocsPreProcessor().process( project, settings );
-      expect( result ).to.deep.eq( { myvar: 'helloWorld' } );
+      let result = new MicroDocsPreProcessor().process( project, settings );
+      expect( result ).toEqual( { myvar: 'helloWorld' } );
     } );
 
-    it( "Test dynamic array", () => {
-      var project:Project = <Project>{ array: [ { name: 'john' }, { name: 'alice' } ] };
-      var settings        = { array: { '{i}': { index: '$i' } } };
+    test( "Test dynamic array", () => {
+      let project: Project = { array: [ { name: 'john' }, { name: 'alice' } ] } as Project;
+      let settings        = { array: { '{i}': { index: '$i' } } };
 
-      var result = new MicroDocsPreProcessor().process( project, settings );
-      expect( result ).to.deep.eq( { array: [ { name: 'john', index: 0 }, { name: 'alice', index: 1 } ] } );
+      let result = new MicroDocsPreProcessor().process( project, settings );
+      expect( result ).toEqual( { array: [ { name: 'john', index: 0 }, { name: 'alice', index: 1 } ] } );
     } );
 
-    it( "Test dynamic object", () => {
-      var project:Project = <Project>{ object: { "john": { age: 15 }, 'alice': { age: 20 } } };
-      var settings        = { object: { '{i}': { name: '$i' } } };
+    test( "Test dynamic object", () => {
+      let project: Project = { object: { "john": { age: 15 }, 'alice': { age: 20 } } } as Project;
+      let settings        = { object: { '{i}': { name: '$i' } } };
 
-      var result = new MicroDocsPreProcessor().process( project, settings );
-      expect( result ).to.deep.eq( {
+      let result = new MicroDocsPreProcessor().process( project, settings );
+      expect( result ).toEqual( {
         object: {
           "john": { age: 15, name: 'john' },
           'alice': { age: 20, name: 'alice' }
@@ -89,8 +89,8 @@ describe( '#MicroDocsPreProcessor: ', () => {
       } );
     } );
 
-    it( "Test IF statement", () => {
-      var project:Project = <Project>{
+    test( "Test IF statement", () => {
+      let project: Project = {
         object: {
           "john": {
             age: 15,
@@ -98,8 +98,8 @@ describe( '#MicroDocsPreProcessor: ', () => {
           },
           'alice': { age: 20 }
         }
-      };
-      var settings        = {
+      } as Project;
+      let settings        = {
         object: {
           '{i}': {
             "~~~IF": {
@@ -111,8 +111,8 @@ describe( '#MicroDocsPreProcessor: ', () => {
         }
       };
 
-      var result = new MicroDocsPreProcessor().process( project, settings );
-      expect( result ).to.deep.eq( {
+      let result = new MicroDocsPreProcessor().process( project, settings );
+      expect( result ).toEqual( {
         object: {
           "john": { age: 15, isOld: false },
           'alice': { age: 20, isOld: true }
@@ -120,37 +120,37 @@ describe( '#MicroDocsPreProcessor: ', () => {
       } );
     } );
 
-    it( "Test comment", () => {
-      var project:Project = <Project>{
+    test( "Test comment", () => {
+      let project: Project = {
         object: {
           'hello': 'bye'
         }
-      };
-      var settings        = {
+      } as Project;
+      let settings        = {
         object: {
           '~~~#': "Ignore me"
         }
       };
 
-      var result = new MicroDocsPreProcessor().process( project, settings );
+      let result = new MicroDocsPreProcessor().process( project, settings );
 
-      expect( result ).to.deep.eq( {
+      expect( result ).toEqual( {
         object: {
           'hello': 'bye'
         }
       } );
     } );
 
-    it( "Test scope", () => {
-      var project:Project = <Project>{
+    test( "Test scope", () => {
+      let project: Project = {
         object: {
           "john": {
             age: 15
           },
           'alice': { age: 20 }
         }
-      };
-      var settings        = {
+      } as Project;
+      let settings        = {
         object: {
           '{i}': {
             "description": "${i} is ${scope.age} years old"
@@ -158,8 +158,8 @@ describe( '#MicroDocsPreProcessor: ', () => {
         }
       };
 
-      var result = new MicroDocsPreProcessor().process( project, settings );
-      expect( result ).to.deep.eq( {
+      let result = new MicroDocsPreProcessor().process( project, settings );
+      expect( result ).toEqual( {
         object: {
           "john": { age: 15, description: "john is 15 years old" },
           'alice': { age: 20, description: "alice is 20 years old" }
