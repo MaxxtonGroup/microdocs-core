@@ -1,63 +1,59 @@
-/// <reference path="../../../typings/index.d.ts" />
-
-import { expect, assert } from 'chai';
 import { ProjectTree } from "./project-tree.model";
 import { ProjectNode } from "./project-node.model";
-import { DependencyNode } from "./dependency-node.model";
 import { DependencyTypes } from '../';
 
 describe( '#ProjectTree: ', () => {
 
   describe( '#addProject', () => {
 
-    it( 'add new project', () => {
-      let projectTree = new ProjectTree();
-      let projectNode = new ProjectNode( 'test-project' );
+    test( 'add new project', () => {
+      const projectTree = new ProjectTree();
+      const projectNode = new ProjectNode( 'test-project' );
 
       projectTree.addProject( projectNode );
 
-      assert.deepEqual( projectTree.projects, [ projectNode ] );
+      expect( projectTree.projects ).toEqual( [ projectNode ] );
     } );
 
-    it( 'add existing project', () => {
-      let projectTree  = new ProjectTree();
-      let projectNode1 = new ProjectNode( 'test-project' );
-      let projectNode2 = new ProjectNode( 'test-project' );
+    test( 'add existing project', () => {
+      const projectTree = new ProjectTree();
+      const projectNode1 = new ProjectNode( 'test-project' );
+      const projectNode2 = new ProjectNode( 'test-project' );
       projectTree.projects.push( projectNode1 );
 
       projectTree.addProject( projectNode2 );
 
-      assert.deepEqual( projectTree.projects, [ projectNode2 ] );
+      expect( projectTree.projects ).toEqual( [ projectNode2 ] );
     } );
 
   } );
 
   describe( '#removeProject', () => {
 
-    it( 'remove existing project', () => {
-      let projectTree = new ProjectTree();
-      let projectNode = new ProjectNode( 'test-project' );
+    test( 'remove existing project', () => {
+      const projectTree = new ProjectTree();
+      const projectNode = new ProjectNode( 'test-project' );
       projectTree.projects.push( projectNode );
 
       projectTree.removeProject( projectNode );
 
-      assert.deepEqual( [], projectTree.projects );
+      expect( [] ).toEqual( projectTree.projects );
     } );
 
-    it( 'remove new project', () => {
-      let projectTree = new ProjectTree();
-      let projectNode = new ProjectNode( 'test-project' );
+    test( 'remove new project', () => {
+      const projectTree = new ProjectTree();
+      const projectNode = new ProjectNode( 'test-project' );
 
       projectTree.removeProject( projectNode );
 
-      assert.deepEqual( projectTree.projects, [] );
+      expect( projectTree.projects ).toEqual( [] );
     } );
 
     /**
      * Remove project from the root tree and remove dependencies to that project from all over the tree
      */
-    it( 'remove project with reference', () => {
-      let rawTree:any = {
+    test( 'remove project with reference', () => {
+      const rawTree: any = {
         'test-project': {},
         'consume1-project': {
           'dependencies': {
@@ -80,11 +76,11 @@ describe( '#ProjectTree: ', () => {
           }
         }
       };
-      let projectTree = ProjectTree.link( rawTree );
+      const projectTree = ProjectTree.link( rawTree );
 
       projectTree.removeProjectByName( 'test-project' );
 
-      assert.deepEqual( projectTree.unlink(), {
+      expect( projectTree.unlink() ).toEqual( {
         'consume1-project': {},
         'consume2-project': {}
       } );
@@ -93,8 +89,8 @@ describe( '#ProjectTree: ', () => {
     /**
      * Rearrange siblings from the removed node which are used else were
      */
-    it( 'remove project and rearrange first siblings', () => {
-      let rawTree:any = {
+    test( 'remove project and rearrange first siblings', () => {
+      const rawTree: any = {
         'test-project': {
           version: '1.0.0',
           dependencies: {
@@ -119,11 +115,11 @@ describe( '#ProjectTree: ', () => {
           }
         }
       };
-      let projectTree = ProjectTree.link( rawTree );
+      const projectTree = ProjectTree.link( rawTree );
 
       projectTree.removeProjectByName( 'test-project' );
 
-      assert.deepEqual( projectTree.unlink(), {
+      expect( projectTree.unlink() ).toEqual( {
         'consume-project': {
           version: '1.0.0',
           dependencies: {
@@ -136,14 +132,14 @@ describe( '#ProjectTree: ', () => {
             }
           }
         }
-      });
-    });
+      } );
+    } );
 
     /**
      * Rearrange siblings from the removed node which are used else were
      */
-    it( 'remove project and rearrange nested siblings', () => {
-      let rawTree:any = {
+    test( 'remove project and rearrange nested siblings', () => {
+      const rawTree: any = {
         'test-project': {
           version: '1.0.0',
           dependencies: {
@@ -228,11 +224,11 @@ describe( '#ProjectTree: ', () => {
           }
         }
       };
-      let projectTree = ProjectTree.link( rawTree );
+      const projectTree = ProjectTree.link( rawTree );
 
       projectTree.removeProjectByName( 'test-project' );
 
-      assert.deepEqual( projectTree.unlink(), {
+      expect( projectTree.unlink() ).toEqual( {
         'consume-project': {
           version: '1.0.0',
           dependencies: {
@@ -277,7 +273,5 @@ describe( '#ProjectTree: ', () => {
         }
       } );
     } );
-
   } );
-
 } );

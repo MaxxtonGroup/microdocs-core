@@ -9,31 +9,28 @@
   "author": "Steven Hermans (s.hermans@maxxton.com)",
   "license": "MIT",
   "scripts": {
-    "test": "./node_modules/.bin/gulp test",
-    "prepublish": "./node_modules/.bin/gulp prepublish",
-    "watch": "./node_modules/.bin/gulp",
-    "link": "cd dist && npm link"
+    "build": "npm run clean && npm run build.tsc && npm run build.package",
+    "build.package": "ts-node ./build/build.package.json.ts",
+    "build.tsc": "tsc --project ./src/tsconfig.json",
+    "serve": "npm build && tsc --project ./src/tsconfig.json --watch",
+    "clean": "ts-node ./build/clean.dist.ts",
+    "test": "jest",
+    "test.watch": "jest --watch",
+    "link": "cd dist && npm link",
+    "prepublish": "npm run build"
   },
   "dependencies": {
-    "uuid": "^3.0.1"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@types/chai": "^3.4.34",
-    "@types/jasmine": "^2.5.40",
-    "@types/node": "^7.0.0",
-    "@types/uuid": "^3.0.0",
-    "async": "^2.0.1",
-    "chai": "^3.5.0",
-    "del": "^2.2.2",
-    "gaze": "^1.1.2",
-    "gulp": "^3.9.0",
-    "gulp-html-extend": "^1.1.6",
-    "gulp-mocha": "^3.0.1",
-    "gulp-replace": "^0.5.4",
-    "gulp-typescript": "3.1.3",
-    "gulp-util": "^3.0.7",
-    "merge2": "^1.0.2",
-    "typescript": "^2.1.5",
-    "vinyl-paths": "^2.1.0"
+    "@types/jest": "^26.0.22",
+    "@types/node": "^14.14.41",
+    "@types/rimraf": "^3.0.0",
+    "@types/uuid": "^8.3.0",
+    "jest": "26.6.3",
+    "rimraf": "^3.0.2",
+    "ts-jest": "26.5.5",
+    "ts-node": "9.1.1",
+    "typescript": "^4.2.4"
   }
 }

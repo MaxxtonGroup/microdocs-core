@@ -19,14 +19,12 @@
     "noImplicitReturns": true,
     "noImplicitUseStrict": false,
     "noFallthroughCasesInSwitch": true,
-    "typeRoots": [
-      "../node_modules/@types"
-    ],
-    "types": [
-      "node",
-      "jasmine",
-      "chai"
-    ]
+    "strictNullChecks": false,
+    "outDir": "../dist"
   },
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ],
   "compileOnSave": false
 }

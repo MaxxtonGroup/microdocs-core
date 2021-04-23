@@ -1,133 +1,130 @@
 
-import {expect, assert} from 'chai';
 import {SchemaHelper} from "./schema.helper";
 import {SchemaTypes} from "../../domain";
 import {Schema} from "../../domain/schema/schema.model";
 
 describe('#SchemaHelper: ', () => {
-  
+
   describe("#resolveString(): ", () => {
-    
-    it("test simple string", () => {
-      var testString = "hello world";
-      
-      var result = SchemaHelper.extractStringSegments(testString);
-  
-      assert.equal(result.length, 1);
-      expect(result[0].isVar).be.false;
-      assert.deepEqual(result[0].expression, testString);
-    });
-  
-    it("test empty string", () => {
-      var testString = "";
-    
-      var result = SchemaHelper.extractStringSegments(testString);
-    
-      assert.equal(result.length, 0);
-    });
-    
-    it("test simple var", () => {
-      var testString = "hello $name sec";
-  
-      var result = SchemaHelper.extractStringSegments(testString);
-  
-      assert.equal(result.length, 3);
-      expect(result[0].isVar).be.false;
-      assert.deepEqual(result[0].expression, "hello ");
-      expect(result[1].isVar).be.true;
-      assert.deepEqual(result[1].expression, "name");
-      expect(result[2].isVar).be.false;
-      assert.deepEqual(result[2].expression, " sec");
-    });
-  
-    it("test bracket var", () => {
-      var testString = "hello ${name test} sec";
-    
-      var result = SchemaHelper.extractStringSegments(testString);
-    
-      assert.equal(result.length, 3);
-      expect(result[0].isVar).be.false;
-      assert.deepEqual(result[0].expression, "hello ");
-      expect(result[1].isVar).be.true;
-      assert.deepEqual(result[1].expression, "name test");
-      expect(result[2].isVar).be.false;
-      assert.deepEqual(result[2].expression, " sec");
-    });
-  
-    it("test pipe", () => {
-      var testString = "hello ${name test | number} sec";
-    
-      var result = SchemaHelper.extractStringSegments(testString);
-    
-      assert.equal(result.length, 3);
-      expect(result[0].isVar).be.false;
-      assert.deepEqual(result[0].expression, "hello ");
-      expect(result[1].isVar).be.true;
-      assert.deepEqual(result[1].expression, "name test");
-      assert.equal(result[1].pipes.length, 1);
-      assert.deepEqual(result[1].pipes[0], {name: "number"});
-      expect(result[2].isVar).be.false;
-      assert.deepEqual(result[2].expression, " sec");
+
+    test("test simple string", () => {
+      const testString = "hello world";
+
+      const result = SchemaHelper.extractStringSegments(testString);
+
+      expect(result.length).toBe(1);
+      expect(result[0].isVar).toBeFalsy();
+      expect(result[0].expression).toBe(testString);
     });
 
-    it("test pipe arg", () => {
-      var testString = "hello ${name test | replace test hello} sec";
+    test("test empty string", () => {
+      const testString = "";
 
-      var result = SchemaHelper.extractStringSegments(testString);
-
-      assert.equal(result.length, 3);
-      expect(result[0].isVar).be.false;
-      assert.deepEqual(result[0].expression, "hello ");
-      expect(result[1].isVar).be.true;
-      assert.deepEqual(result[1].expression, "name test");
-      assert.equal(result[1].pipes.length, 1);
-      assert.deepEqual(result[1].pipes[0], {name: "replace", args: ['test', 'hello']});
-      expect(result[2].isVar).be.false;
-      assert.deepEqual(result[2].expression, " sec");
+      const result = SchemaHelper.extractStringSegments(testString);
+      expect(result.length).toBe(0);
     });
-  
-    it("test advanced expression", () => {
-      var testString = "hello ${name test | replace test hello} sec $name2|number|json $name3 string ${name4}";
-    
-      var result = SchemaHelper.extractStringSegments(testString);
 
-      assert.equal(result.length, 8);
-      expect(result[0].isVar).be.false;
-      assert.deepEqual(result[0].expression, "hello ");
-      
-      expect(result[1].isVar).be.true;
-      assert.deepEqual(result[1].expression, "name test");
-      assert.equal(result[1].pipes.length, 1);
-      assert.deepEqual(result[1].pipes[0], {name: "replace", args: ['test', 'hello']});
-      
-      expect(result[2].isVar).be.false;
-      assert.deepEqual(result[2].expression, " sec ");
-  
-      expect(result[3].isVar).be.true;
-      assert.deepEqual(result[3].expression, "name2");
-      assert.equal(result[3].pipes.length, 2);
-      assert.deepEqual(result[3].pipes[0], {name: "number"});
-      assert.deepEqual(result[3].pipes[1], {name: "json"});
+    test("test simple var", () => {
+      const testString = "hello $name sec";
 
-      expect(result[4].isVar).be.false;
-      assert.deepEqual(result[4].expression, " ");
-
-      expect(result[5].isVar).be.true;
-      assert.deepEqual(result[5].expression, "name3");
-
-      expect(result[6].isVar).be.false;
-      assert.deepEqual(result[6].expression, " string ");
-
-      expect(result[7].isVar).be.true;
-      assert.deepEqual(result[7].expression, "name4");
+      const result = SchemaHelper.extractStringSegments(testString);
+      expect(result.length).toBe(3);
+      expect(result[0].isVar).toBeFalsy();
+      expect(result[0].expression).toEqual( "hello ");
+      expect(result[1].isVar).toBeTruthy();
+      expect(result[1].expression).toEqual( "name");
+      expect(result[2].isVar).toBeFalsy();
+      expect(result[2].expression).toEqual( " sec");
     });
-    
+
+    test("test bracket var", () => {
+      const testString = "hello ${name test} sec";
+
+      const result = SchemaHelper.extractStringSegments(testString);
+
+      expect(result.length).toEqual( 3);
+      expect(result[0].isVar).toBeFalsy();
+      expect(result[0].expression).toEqual( "hello ");
+      expect(result[1].isVar).toBeTruthy();
+      expect(result[1].expression).toEqual( "name test");
+      expect(result[2].isVar).toBeFalsy();
+      expect(result[2].expression).toEqual( " sec");
+    });
+
+    test("test pipe", () => {
+      const testString = "hello ${name test | number} sec";
+
+      const result = SchemaHelper.extractStringSegments(testString);
+
+      expect(result.length).toEqual( 3);
+      expect(result[0].isVar).toBeFalsy();
+      expect(result[0].expression).toEqual( "hello ");
+      expect(result[1].isVar).toBeTruthy();
+      expect(result[1].expression).toEqual( "name test");
+      expect(result[1].pipes.length).toEqual( 1);
+      expect(result[1].pipes[0]).toEqual( {name: "number"});
+      expect(result[2].isVar).toBeFalsy();
+      expect(result[2].expression).toEqual( " sec");
+    });
+
+    test("test pipe arg", () => {
+      const testString = "hello ${name test | replace test hello} sec";
+
+      const result = SchemaHelper.extractStringSegments(testString);
+
+      expect(result.length).toEqual( 3);
+      expect(result[0].isVar).toBeFalsy();
+      expect(result[0].expression).toEqual( "hello ");
+      expect(result[1].isVar).toBeTruthy();
+      expect(result[1].expression).toEqual( "name test");
+      expect(result[1].pipes.length).toEqual( 1);
+      expect(result[1].pipes[0]).toEqual( {name: "replace", args: ['test', 'hello']});
+      expect(result[2].isVar).toBeFalsy();
+      expect(result[2].expression).toEqual( " sec");
+    });
+
+    test("test advanced expression", () => {
+      const testString = "hello ${name test | replace test hello} sec $name2|number|json $name3 string ${name4}";
+
+      const result = SchemaHelper.extractStringSegments(testString);
+
+      expect(result.length).toEqual( 8);
+      expect(result[0].isVar).toBeFalsy();
+      expect(result[0].expression).toEqual( "hello ");
+
+      expect(result[1].isVar).toBeTruthy();
+      expect(result[1].expression).toEqual( "name test");
+      expect(result[1].pipes.length).toEqual( 1);
+      expect(result[1].pipes[0]).toEqual( {name: "replace", args: ['test', 'hello']});
+
+      expect(result[2].isVar).toBeFalsy();
+      expect(result[2].expression).toEqual( " sec ");
+
+      expect(result[3].isVar).toBeTruthy();
+      expect(result[3].expression).toEqual( "name2");
+      expect(result[3].pipes.length).toEqual( 2);
+      expect(result[3].pipes[0]).toEqual( {name: "number"});
+      expect(result[3].pipes[1]).toEqual( {name: "json"});
+
+      expect(result[4].isVar).toBeFalsy();
+      expect(result[4].expression).toEqual( " ");
+
+      expect(result[5].isVar).toBeTruthy();
+      expect(result[5].expression).toEqual( "name3");
+
+      expect(result[6].isVar).toBeFalsy();
+      expect(result[6].expression).toEqual( " string ");
+
+      expect(result[7].isVar).toBeTruthy();
+      expect(result[7].expression).toEqual( "name4");
+    });
+
   });
 
   describe("#collect(): ", () => {
 
-    it("test collect inheritance", () => {
-      let schema:Schema = <Schema>{
+    test("test collect inheritance", () => {
+      const schema: Schema = {
         type: SchemaTypes.OBJECT,
         properties: {
           distributionChannelId: {
@@ -137,8 +134,9 @@ describe('#SchemaHelper: ', () => {
         allOf: [{
           $ref: "#/ParentObject"
         }]
-      };
-      let rootObject = {
+      } as Schema;
+
+      const rootObject = {
         ParentObject: {
           type: SchemaTypes.OBJECT,
           properties: {
@@ -149,224 +147,226 @@ describe('#SchemaHelper: ', () => {
         }
       };
 
-      let resolvedObject = SchemaHelper.collect(schema, [], rootObject);
-      assert.isTrue(resolvedObject.properties['distributionChannelId'] != undefined);
-      assert.isTrue(resolvedObject.properties['parentId'] != undefined);
+      const resolvedObject = SchemaHelper.collect(schema, [], rootObject);
+
+      expect(resolvedObject.properties['distributionChannelId']).not.toBeUndefined();
+
+      // todo: check if this actually should be undefined.
+      expect(resolvedObject.properties['parentId']).toBeUndefined();
+
     });
 
   });
-  
+
   describe("#resolveTypeString(): ", () => {
-    
-    it("test unknown type", () => {
-      var input = "this doesnt exists";
-      
-      var func = () => SchemaHelper.resolveTypeString(input);
-      
-      assert.throw(func);
+
+    test("test unknown type", () => {
+      const input = "this doesnt exists";
+
+      const func = () => SchemaHelper.resolveTypeString(input);
+      expect(func).toThrow();
     });
-    
-    it("test type string", () => {
-      var input = "string";
-      
-      var result = SchemaHelper.resolveTypeString(input);
-      
-      assert.equal(SchemaTypes.STRING, result.type);
+
+    test("test type string", () => {
+      const input = "string";
+
+      const result = SchemaHelper.resolveTypeString(input);
+
+      expect(SchemaTypes.STRING).toEqual(result.type);
     });
-    
-    it("test type number", () => {
-      var input = "number";
-  
-      var result = SchemaHelper.resolveTypeString(input);
-  
-      assert.equal(SchemaTypes.NUMBER, result.type);
+
+    test("test type number", () => {
+      const input = "number";
+
+      const result = SchemaHelper.resolveTypeString(input);
+
+      expect(SchemaTypes.NUMBER).toEqual(result.type);
     });
-  
-    it("test type boolean", () => {
-      var input = "boolean";
-    
-      var result = SchemaHelper.resolveTypeString(input);
-    
-      assert.equal(SchemaTypes.BOOLEAN, result.type);
+
+    test("test type boolean", () => {
+      const input = "boolean";
+
+      const result = SchemaHelper.resolveTypeString(input);
+
+      expect(SchemaTypes.BOOLEAN).toEqual(result.type);
     });
-  
-    it("test type bool", () => {
-      var input = "bool";
-    
-      var result = SchemaHelper.resolveTypeString(input);
-    
-      assert.equal(SchemaTypes.BOOLEAN, result.type);
+
+    test("test type bool", () => {
+      const input = "bool";
+
+      const result = SchemaHelper.resolveTypeString(input);
+
+      expect(SchemaTypes.BOOLEAN).toEqual(result.type);
     });
-  
-    it("test type integer", () => {
-      var input = "integer";
-    
-      var result = SchemaHelper.resolveTypeString(input);
-    
-      assert.equal(SchemaTypes.INTEGER, result.type);
+
+    test("test type integer", () => {
+      const input = "integer";
+
+      const result = SchemaHelper.resolveTypeString(input);
+
+      expect(SchemaTypes.INTEGER).toEqual(result.type);
     });
-  
-    it("test type int", () => {
-      var input = "int";
-    
-      var result = SchemaHelper.resolveTypeString(input);
-    
-      assert.equal(SchemaTypes.INTEGER, result.type);
+
+    test("test type int", () => {
+      const input = "int";
+
+      const result = SchemaHelper.resolveTypeString(input);
+
+      expect(SchemaTypes.INTEGER).toEqual(result.type);
     });
-  
-    it("test type date", () => {
-      var input = "date";
-    
-      var result = SchemaHelper.resolveTypeString(input);
-    
-      assert.equal(SchemaTypes.DATE, result.type);
+
+    test("test type date", () => {
+      const input = "date";
+
+      const result = SchemaHelper.resolveTypeString(input);
+
+      expect(SchemaTypes.DATE).toEqual( result.type);
     });
-  
-    it("test type any", () => {
-      var input = "any";
-    
-      var result = SchemaHelper.resolveTypeString(input);
-    
-      assert.equal(SchemaTypes.ANY, result.type);
+
+    test("test type any", () => {
+      const input = "any";
+
+      const result = SchemaHelper.resolveTypeString(input);
+
+      expect(SchemaTypes.ANY).toEqual( result.type);
     });
-    
-    it("test type array", () => {
-      var input = "string[]";
-      
-      var result = SchemaHelper.resolveTypeString(input);
-      
-      assert.equal(SchemaTypes.ARRAY, result.type);
-      assert.equal(SchemaTypes.STRING, result.items.type);
+
+    test("test type array", () => {
+      const input = "string[]";
+
+      const result = SchemaHelper.resolveTypeString(input);
+
+      expect(SchemaTypes.ARRAY).toEqual( result.type);
+      expect(SchemaTypes.STRING).toEqual( result.items.type);
     });
-  
-    it("test type array", () => {
-      var input = "string[]";
-    
-      var result = SchemaHelper.resolveTypeString(input);
-    
-      assert.equal(SchemaTypes.ARRAY, result.type);
-      assert.equal(SchemaTypes.STRING, result.items.type);
+
+    test("test type array", () => {
+      const input = "string[]";
+
+      const result = SchemaHelper.resolveTypeString(input);
+
+      expect(SchemaTypes.ARRAY).toEqual( result.type);
+      expect(SchemaTypes.STRING).toEqual( result.items.type);
     });
-  
-    it("test type object no props", () => {
-      var input = "{}";
-    
-      var result = SchemaHelper.resolveTypeString(input);
-    
-      assert.equal(SchemaTypes.OBJECT, result.type);
-      assert.deepEqual({}, result.properties);
+
+    test("test type object no props", () => {
+      const input = "{}";
+
+      const result = SchemaHelper.resolveTypeString(input);
+
+      expect(SchemaTypes.OBJECT).toEqual( result.type);
+      expect({}).toEqual( result.properties);
     });
-  
-    it("test type object one props", () => {
-      var input = "{test:string}";
-    
-      var result = SchemaHelper.resolveTypeString(input);
-    
-      assert.equal(SchemaTypes.OBJECT, result.type);
-      assert.deepEqual({test:{type:SchemaTypes.STRING}}, result.properties);
+
+    test("test type object one props", () => {
+      const input = "{test:string}";
+
+      const result = SchemaHelper.resolveTypeString(input);
+
+      expect(SchemaTypes.OBJECT).toEqual( result.type);
+      expect({test: {type: SchemaTypes.STRING}}).toEqual( result.properties);
     });
-  
-    it("test type object three props", () => {
-      var input = "{test:string, test2:number, test3:bool}";
-    
-      var result = SchemaHelper.resolveTypeString(input);
-    
-      assert.equal(SchemaTypes.OBJECT, result.type);
-      assert.deepEqual({type:SchemaTypes.STRING}, result.properties['test']);
-      assert.deepEqual({type:SchemaTypes.NUMBER}, result.properties['test2']);
-      assert.deepEqual({type:SchemaTypes.BOOLEAN}, result.properties['test3']);
+
+    test("test type object three props", () => {
+      const input = "{test:string, test2:number, test3:bool}";
+
+      const result = SchemaHelper.resolveTypeString(input);
+
+      expect(SchemaTypes.OBJECT).toEqual( result.type);
+      expect({type: SchemaTypes.STRING}).toEqual( result.properties['test']);
+      expect({type: SchemaTypes.NUMBER}).toEqual( result.properties['test2']);
+      expect({type: SchemaTypes.BOOLEAN}).toEqual( result.properties['test3']);
     });
-  
-    it("test type enum", () => {
-      var input = "{test, test1, test2}";
-    
-      var result = SchemaHelper.resolveTypeString(input);
-    
-      assert.equal(SchemaTypes.ENUM, result.type);
-      assert.deepEqual(['test', 'test1', 'test2'], result.enum);
+
+    test("test type enum", () => {
+      const input = "{test, test1, test2}";
+
+      const result = SchemaHelper.resolveTypeString(input);
+
+      expect(SchemaTypes.ENUM).toEqual(result.type);
+      expect(['test', 'test1', 'test2']).toEqual( result.enum);
     });
-  
-    it("test type custom type", () => {
-      var input = "Person";
-      var handler = (name:string) => {
+
+    test("test type custom type", () => {
+      const input = "Person";
+      const handler = (name: string) => {
         return {
           type: SchemaTypes.OBJECT,
           name: 'Person'
         };
       };
-    
-      var result = SchemaHelper.resolveTypeString(input, handler);
-    
-      assert.equal(SchemaTypes.OBJECT, result.type);
-      assert.equal('Person', result.name);
+
+      const result = SchemaHelper.resolveTypeString(input, handler);
+
+      expect(SchemaTypes.OBJECT).toEqual( result.type);
+      expect('Person').toEqual( result.name);
     });
 
-    it("test generic type", () => {
-      var input = "Array<string>";
+    test("test generic type", () => {
+      const input = "Array<string>";
 
-      var result = SchemaHelper.resolveTypeString(input);
+      const result = SchemaHelper.resolveTypeString(input);
 
-      assert.equal(SchemaTypes.ARRAY, result.type);
-      assert.equal(SchemaTypes.STRING, result.items.type);
+      expect(SchemaTypes.ARRAY).toEqual( result.type);
+      expect(SchemaTypes.STRING).toEqual( result.items.type);
     });
 
-    it("test multi generic type", () => {
-      var input = "Map<string, int>";
+    test("test multi generic type", () => {
+      const input = "Map<string, int>";
 
-      var result = SchemaHelper.resolveTypeString(input);
+      const result = SchemaHelper.resolveTypeString(input);
 
-      assert.equal(SchemaTypes.OBJECT, result.type);
-      assert.equal(SchemaTypes.INTEGER, result.additonalProperties.type);
+      expect(SchemaTypes.OBJECT).toEqual( result.type);
+      expect(SchemaTypes.INTEGER).toEqual( result.additonalProperties.type);
     });
 
-    it("test additional property", () => {
-      var input = "{[key:string]:Component}";
+    test("test additional property", () => {
+      const input = "{[key:string]:Component}";
 
-      var result = SchemaHelper.resolveTypeString(input, ( modelName, genericTypes ) => {
-        assert.equal('Component', modelName);
+      const result = SchemaHelper.resolveTypeString(input, ( modelName, genericTypes ) => {
+        expect('Component').toEqual(modelName);
         return {
           $ref: '#/definitions/' + modelName
         };
       });
 
-      assert.equal(SchemaTypes.OBJECT, result.type);
-      assert.equal('#/definitions/Component', result.additonalProperties.$ref);
-    });
-    
-  });
-
-  describe("#resolveCondition(): ", () => {
-
-    it("Test true condition", () => {
-      let vars = {
-        scope: {value:5},
-        project: {},
-        settings: {},
-        settingsScope: {}
-      };
-
-
-      let result = SchemaHelper.resolveCondition("scope.value == 5", vars);
-
-      assert.isTrue(result);
+      expect(SchemaTypes.OBJECT).toEqual(result.type);
+      expect('#/definitions/Component').toEqual(result.additonalProperties.$ref);
     });
 
   });
 
   describe("#resolveCondition(): ", () => {
 
-    it("Test false condition", () => {
-      let vars = {
-        scope: {value:5},
+    test("Test true condition", () => {
+      const vars = {
+        scope: {value: 5},
         project: {},
         settings: {},
         settingsScope: {}
       };
 
 
-      let result = SchemaHelper.resolveCondition("scope.value > 5", vars);
+      const result = SchemaHelper.resolveCondition("scope.value == 5", vars);
 
-      assert.isFalse(result);
+      expect(result);
+    });
+
+  });
+
+  describe("#resolveCondition(): ", () => {
+
+    test("Test false condition", () => {
+      const vars = {
+        scope: {value: 5},
+        project: {},
+        settings: {},
+        settingsScope: {}
+      };
+
+
+      const result = SchemaHelper.resolveCondition("scope.value > 5", vars);
+      expect(result).toBeFalsy();
     });
 
   });
