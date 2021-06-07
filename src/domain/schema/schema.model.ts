@@ -34,6 +34,7 @@ export interface Schema {
   simpleName?: string;
   genericName?: string;
   genericSimpleName?: string;
+  sourceLink?: string;
 
   //enum
   enum?: any[];
