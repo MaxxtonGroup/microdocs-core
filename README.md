@@ -16,3 +16,8 @@ npm run test
 ```
 npm run prepublish
 ```
+
+### Publish
+```
+npm publish dist --registry https://nexus-mxtf.maxxton.com/repository/npm-registry/
+```
