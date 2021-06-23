@@ -6,7 +6,7 @@ Core library used across other MicroDocs Typescript projects
 ```
 npm install
 npm run link
-npm run watch
+npm run serve
 ```
 ### Test
 ```

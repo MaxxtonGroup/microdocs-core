@@ -1,4 +1,4 @@
-import {Schema, SchemaTypes} from "../../domain";
+import { Schema, SchemaTypes } from "../../domain";
 
 /**
  * Helper class for generation example data based on schema and resolve references
@@ -9,13 +9,15 @@ export class SchemaHelper {
    * Resolve schema and return an example object
    * @param schema
    * @param fieldName
+   * @param objectStack
+   * @param rootObject
    * @return example object
    */
   public static generateExample(schema: Schema, fieldName?: string, objectStack: string[] = [], rootObject?: {}): any {
-    if (schema != undefined && schema != null) {
+    if (schema != undefined) {
       if (schema.type == SchemaTypes.OBJECT) {
-        if (schema.name != undefined && schema.name != null) {
-          var sameObjects: string[] = objectStack.filter((object) => object == schema.name);
+        if (schema.name != undefined) {
+          let sameObjects: string[] = objectStack.filter((object) => object == schema.name);
           if (sameObjects.length > 0) {
             return '[' + schema.name + ']';
           }
@@ -26,41 +28,39 @@ export class SchemaHelper {
       if (schema.default != undefined) {
         return schema.default;
       }
-      if (schema.type == SchemaTypes.ENUM && schema.enum != undefined && schema.enum != null) {
+      if (schema.type == SchemaTypes.ENUM && schema.enum != undefined) {
         if (schema.enum.length == 0) {
           return "[" + schema.name + "]";
         }
-        var random = Math.floor((Math.random() * schema.enum.length));
+        const random = Math.floor((Math.random() * schema.enum.length));
         return schema.enum[random];
       } else if (schema.type == SchemaTypes.BOOLEAN) {
         return true;
       } else if (schema.type == SchemaTypes.INTEGER) {
-        var random = 13;
-        return random;
+        return 13;
       } else if (schema.type == SchemaTypes.NUMBER) {
-        var random = 13.6;
-        return random;
+        return 13.6;
       } else if (schema.type == SchemaTypes.STRING) {
         return "string";
       } else if (schema.type == SchemaTypes.ARRAY) {
-        var array: Array<any> = [];
+        const array: Array<any> = [];
         array.push(SchemaHelper.generateExample(schema.items, undefined, objectStack, rootObject));
         return array;
       } else if (schema.type == SchemaTypes.OBJECT) {
-        var object: any = {};
+        const object: any = {};
         if (schema.allOf != undefined) {
           schema.allOf.forEach(superSchema => {
-            var superObject = SchemaHelper.generateExample(superSchema, fieldName, objectStack.slice(), rootObject);
-            for (var field in superObject) {
+            const superObject = SchemaHelper.generateExample(superSchema, fieldName, objectStack.slice(), rootObject);
+            for (let field in superObject) {
               object[field] = superObject[field];
             }
           });
         }
-        for (var field in schema.properties) {
-          var property = schema.properties[field];
-          var name = field;
-          var jsonName = SchemaHelper.resolveReference('mappings.json.name', property);
-          var jsonIgnore = SchemaHelper.resolveReference('mappings.json.ignore', property);
+        for (const field in schema.properties) {
+          const property = schema.properties[ field ];
+          let name = field;
+          const jsonName = SchemaHelper.resolveReference('mappings.json.name', property);
+          const jsonIgnore = SchemaHelper.resolveReference('mappings.json.ignore', property);
           if (jsonIgnore != true) {
             if (jsonName != null) {
               name = jsonName;
@@ -76,30 +76,33 @@ export class SchemaHelper {
   }
 
   public static collect(schema: Schema, objectStack: string[] = [], rootObject?: {}): Schema {
-    if (schema == undefined || schema == null) {
+    if (schema == undefined) {
       return schema;
     }
     if (schema.$ref != undefined) {
-      // let newSchema = SchemaHelper.resolveReference(schema.$ref, rootObject);
-      // for(let key in newSchema){
-      //   schema[key] = newSchema[key];
-      // }
+      if (schema.$ref.includes("com.maxxton")) {
+        let newSchema = SchemaHelper.resolveReference(schema.$ref, rootObject);
+        for (let key in newSchema) {
+          schema[ key ] = newSchema[ key ];
+        }
+      }
+      else console.log("ROBBBBBBBBBBBBBB " + schema.$ref);
     }
     if (schema.type == SchemaTypes.OBJECT) {
-      if (schema.name != undefined && schema.name != null) {
-        var sameObjects: string[] = objectStack.filter((object) => object == schema.name);
+      if (schema.name != undefined) {
+        const sameObjects: string[] = objectStack.filter((object) => object == schema.name);
         if (sameObjects.length > 0) {
           return schema;
         }
         objectStack.push(schema.name);
       }
-      var fullSchema = schema;
-      if (schema.allOf != undefined && schema.allOf != null) {
+      const fullSchema = schema;
+      if (schema.allOf != undefined) {
         schema.allOf.forEach(superSchema => {
           if (superSchema){
             superSchema = SchemaHelper.collect(superSchema, objectStack, rootObject);
             if(superSchema.properties) {
-              for (var key in superSchema.properties) {
+              for (let key in superSchema.properties) {
                 //todo: combine instead of override
                 fullSchema.properties[key] = superSchema.properties[key];
               }
@@ -107,7 +110,7 @@ export class SchemaHelper {
           }
         });
       }
-      if (schema.anyOf != undefined && schema.anyOf != null) {
+      if (schema.anyOf != undefined) {
         schema.anyOf = schema.anyOf.map(subSchema => {
           if (subSchema) {
             subSchema = SchemaHelper.collect(subSchema, objectStack, rootObject);
@@ -115,8 +118,8 @@ export class SchemaHelper {
           return subSchema;
         });
       }
-      if (schema.properties != undefined && schema.properties != null) {
-        for (var key in schema.properties) {
+      if (schema.properties != undefined) {
+        for (let key in schema.properties) {
           //todo: combine instead of override
           fullSchema.properties[key] = SchemaHelper.collect(schema.properties[key], objectStack, rootObject);
         }
@@ -135,8 +138,8 @@ export class SchemaHelper {
    */
   public static resolveReference(reference: string, vars: any): any {
     if (reference != undefined || reference == null) {
-      var currentObject = vars;
-      var segments: string[] = [];
+      let currentObject = vars;
+      let segments: string[] = [];
       if (reference.indexOf("#/") == 0) {
         // href
         segments = reference.substring(2).split("/");
@@ -145,10 +148,10 @@ export class SchemaHelper {
         segments = reference.split(".");
       }
       segments.forEach((segment) => {
-        if (currentObject != undefined && currentObject != null) {
-          var resolvedName = segment;
+        if (currentObject != undefined) {
+          let resolvedName = segment;
           if (segment.indexOf('[') == 0 && segment.indexOf(']') == segment.length - 1) {
-            var segmentName = segment.substring(1, segment.length - 1);
+            const segmentName = segment.substring(1, segment.length - 1);
             resolvedName = SchemaHelper.resolveString('${' + segmentName + '}', vars);
           }
           currentObject = currentObject[resolvedName];
@@ -175,20 +178,22 @@ export class SchemaHelper {
    * @return {{isVar: boolean, expression: string, pipes?: string[]}[]}
    */
   public static extractStringSegments(string: string): {isVar: boolean, expression: string, pipes?: {name: string, args?: string[]}[]}[] {
-    var isEscaped = false;
-    var isVar = false;
-    var isBrackets = false;
-    var isPipe = false;
+    let newPipes: {name: string, args?: string[]}[];
+    let currentPipe;
+    let isEscaped = false;
+    let isVar = false;
+    let isBrackets = false;
+    let isPipe = false;
 
-    var segments: {isVar: boolean, expression: string, pipes?: {name: string, args?: string[]}[]}[] = [];
-    var currentSegment: {isVar: boolean, expression: string, pipes?: {name: string, args?: string[]}[]} = null;
-    for (var i = 0; i < string.length; i++) {
-      var char = string.charAt(i);
+    const segments: { isVar: boolean, expression: string, pipes?: { name: string, args?: string[] }[] }[] = [];
+    let currentSegment: { isVar: boolean, expression: string, pipes?: { name: string, args?: string[] }[] } = null;
+    for (let i = 0; i < string.length; i++) {
+      const char = string.charAt(i);
       if (isEscaped) {
         isEscaped = false;
         if (isPipe) {
           if (currentSegment.pipes && currentSegment.pipes.length > 0) {
-            var currentPipe = currentSegment.pipes[currentSegment.pipes.length - 1];
+            currentPipe = currentSegment.pipes[currentSegment.pipes.length - 1];
             if (currentPipe.args && currentPipe.args.length > 0) {
               currentPipe.args[currentPipe.args.length - 1] += char;
             } else {
@@ -216,7 +221,7 @@ export class SchemaHelper {
             if (currentSegment.isVar) {
               currentSegment.expression = currentSegment.expression.trim();
               if (currentSegment.pipes) {
-                var newPipes: {name: string, args?: string[]}[] = [];
+                newPipes = [];
                 currentSegment.pipes.forEach((pipe => {
                   newPipes.push(pipe);
                 }));
@@ -233,7 +238,7 @@ export class SchemaHelper {
             if (currentSegment.isVar) {
               currentSegment.expression = currentSegment.expression.trim();
               if (currentSegment.pipes) {
-                var newPipes: {name: string, args?: string[]}[] = [];
+                newPipes = [];
                 currentSegment.pipes.forEach(pipe => {
                   newPipes.push(pipe);
                 });
@@ -252,7 +257,7 @@ export class SchemaHelper {
           }
         } else if (currentSegment && isPipe) {
           if (currentSegment.pipes && currentSegment.pipes.length > 0) {
-            var currentPipe = currentSegment.pipes[currentSegment.pipes.length - 1];
+            currentPipe = currentSegment.pipes[ currentSegment.pipes.length - 1 ];
             if (char === ' ' && currentPipe.name !== '') {
               if (!currentPipe.args) {
                 currentPipe.args = [''];
@@ -281,7 +286,7 @@ export class SchemaHelper {
           if (currentSegment.isVar) {
             currentSegment.expression = currentSegment.expression.trim();
             if (currentSegment.pipes) {
-              var newPipes: {name: string, args?: string[]}[] = [];
+              newPipes = [];
               currentSegment.pipes.forEach(pipe => {
                 newPipes.push(pipe);
               });
@@ -302,7 +307,7 @@ export class SchemaHelper {
       if (currentSegment.isVar) {
         currentSegment.expression = currentSegment.expression.trim();
         if (currentSegment.pipes) {
-          var newPipes: {name: string, args?: string[]}[] = [];
+          newPipes = [];
           currentSegment.pipes.forEach(pipe => {
             newPipes.push(pipe);
           });
@@ -317,15 +322,15 @@ export class SchemaHelper {
   /**
    * Resolve string which contains references (eg. "hello ${foo.bar}")
    * @param string string to be resolved
-   * @param object object where to search in
+   * @param vars
    * @returns {string} resolved string
    */
   public static resolveString(string: string, vars: {}): any {
-    var result: any;
-    var segments = SchemaHelper.extractStringSegments(string);
+    let result: any;
+    const segments = SchemaHelper.extractStringSegments(string);
     segments.forEach(segment => {
       if (segment.isVar) {
-        var resolvedObject = SchemaHelper.resolveReference(segment.expression.trim(), vars);
+        let resolvedObject = SchemaHelper.resolveReference(segment.expression.trim(), vars);
         if (resolvedObject != undefined) {
           if (segment.pipes) {
             segment.pipes.forEach(pipe => {
@@ -336,7 +341,7 @@ export class SchemaHelper {
                 } else if (pipe.name.trim() === 'boolean') {
                   resolvedObject = Boolean(resolvedObject);
                 } else if (pipe.name.trim() === 'string') {
-                  resolvedObject = new String(resolvedObject);
+                  resolvedObject = String(resolvedObject);
                 } else if (pipe.name.trim() === 'json') {
                   resolvedObject = JSON.stringify(resolvedObject);
                 } else if (pipe.name.trim() === 'uc') {
@@ -345,9 +350,7 @@ export class SchemaHelper {
                   resolvedObject = resolvedObject.toLowerCase();
                 } else if (pipe.name.trim() === 'replace') {
                   if (pipe.args.length >= 2) {
-                    console.error("replace: '" + resolvedObject + "' " + pipe.args[0] + " - " + pipe.args[1]);
                     resolvedObject = resolvedObject.replace(new RegExp(pipe.args[0], 'g'), pipe.args[1]);
-                    console.error("result: " + resolvedObject);
                   } else {
                     console.warn("Pipe replace requires 2 arguments ");
                   }
@@ -381,12 +384,13 @@ export class SchemaHelper {
    * @returns {{}}
    */
   public static resolveObject(object: any, rootObject ?: {}): {} {
-    if (object != null && object != undefined) {
+    if (object != null) {
+      let key;
       if (rootObject == undefined) {
         rootObject = object;
       }
-      for (var key in object) {
-        var childObject = object[key];
+      for (key in object) {
+        const childObject = object[ key ];
         if (typeof(childObject) == SchemaTypes.OBJECT) {
           SchemaHelper.resolveObject(childObject, rootObject);
         } else if (typeof(childObject) == SchemaTypes.STRING && key != '$ref') {
@@ -394,9 +398,9 @@ export class SchemaHelper {
         }
       }
       if (object['$ref'] != undefined) {
-        var refObject = SchemaHelper.resolveReference(object['$ref'], rootObject);
+        const refObject = SchemaHelper.resolveReference(object[ '$ref' ], rootObject);
         if (refObject != null) {
-          for (var key in refObject) {
+          for (key in refObject) {
             if (object[key] == undefined) {
               object[key] = refObject[key];
             }
@@ -415,11 +419,11 @@ export class SchemaHelper {
    * @param value value
    */
   public static setProperty(object: {}, key: string, value: any): {} {
-    var segments = key.split(".");
-    var currentObject: any = object;
-    var currentPath: string = null;
-    for (var i = 0; i < segments.length; i++) {
-      var segment = segments[i];
+    const segments = key.split(".");
+    let currentObject: any = object;
+    let currentPath: string = null;
+    for (let i = 0; i < segments.length; i++) {
+      const segment = segments[ i ];
       if (currentPath) {
         currentPath += '.' + segment;
       } else {
@@ -451,14 +455,15 @@ export class SchemaHelper {
    * @return {{}}
    */
   public static removeProperty(object: {}, key: string): {} {
-    var segments = key.split(".");
-    var currentObject: any = object;
-    var currentPath: string = null;
-    var objectStack: any = [];
+    let i;
+    const segments = key.split(".");
+    let currentObject: any = object;
+    let currentPath: string = null;
+    const objectStack: any = [];
 
-    for (var i = 0; i < segments.length; i++) {
+    for (i = 0; i < segments.length; i++) {
       objectStack.push(currentObject);
-      var segment = segments[i];
+      const segment = segments[ i ];
       if (currentPath) {
         currentPath += '.' + segment;
       } else {
@@ -479,7 +484,7 @@ export class SchemaHelper {
       }
     }
 
-    for (var i = objectStack.length - 1; i >= 0; i--) {
+    for (i = objectStack.length - 1; i >= 0; i--) {
       if (Object.keys(currentObject).length == 0) {
         if (i > 0) {
           delete objectStack[i - 1][segments[i - 1]];
@@ -511,13 +516,13 @@ export class SchemaHelper {
   }
 
   public static resolveCondition(condition: any, vars: {scope?: {}, project?: {}, settings?: {}, settingsScope?: {}}): boolean {
-    var result: boolean;
+    let result: boolean;
     (function () {
-      var scope = vars.scope;
-      var project = vars.project;
-      var settings = vars.settings;
-      var settingsScope = vars.settingsScope;
-      var $ = vars;
+      const scope = vars.scope;
+      const project = vars.project;
+      const settings = vars.settings;
+      const settingsScope = vars.settingsScope;
+      const $ = vars;
       if (typeof(condition) === 'string') {
         result = eval(condition);
       } else if (typeof(condition) === 'function') {
@@ -534,18 +539,20 @@ export class SchemaHelper {
    * Resolve a type string, eg. '{id:number,items:Product[],category:{Indoor, Outdoor},tags:Array<string>}[]'
    * @param string type string
    * @param resolveUnknownObject function to resolve unknown types, like 'Product' in the example
+   * @param originalString
+   * @param cursor
    * @return {any}
    */
   public static resolveTypeString(string: string, resolveUnknownObject?: ((name: string, genericTypes: Schema[]) => Schema), originalString?: string, cursor: number = 0): Schema {
     if (!originalString) {
       originalString = string;
     }
-    var input = string.trim();
+    let input = string.trim();
 
     // Try resolve array
-    var arrayMatch = input.match(REGEX_TYPE_ARRAY);
+    const arrayMatch = input.match(REGEX_TYPE_ARRAY);
     if (arrayMatch && arrayMatch.length == 2) {
-      var subSchema = SchemaHelper.resolveTypeString(arrayMatch[1], resolveUnknownObject, originalString, cursor + arrayMatch.index);
+      const subSchema = SchemaHelper.resolveTypeString(arrayMatch[ 1 ], resolveUnknownObject, originalString, cursor + arrayMatch.index);
       return {
         type: SchemaTypes.ARRAY,
         items: subSchema
@@ -553,16 +560,16 @@ export class SchemaHelper {
     }
 
     // Try resolve object or enum
-    var isObjectMatch = input.match(REGEX_TYPE_IS_OBJECT);
+    const isObjectMatch = input.match(REGEX_TYPE_IS_OBJECT);
     if (isObjectMatch && isObjectMatch.length == 2) {
-      var schema: Schema = {};
-      var objContent = isObjectMatch[1];
-      var regExp = new RegExp(REGEX_TYPE_OBJECT, 'g');
-      var propMatch: RegExpExecArray;
-      var additionalProperty: boolean = false;
+      const schema: Schema = {};
+      const objContent = isObjectMatch[ 1 ];
+      const regExp = new RegExp(REGEX_TYPE_OBJECT, 'g');
+      let propMatch: RegExpExecArray;
+      let additionalProperty: boolean = false;
       while (propMatch = regExp.exec(objContent)) {
-        var key = propMatch[1];
-        var value = propMatch[3];
+        const key = propMatch[ 1 ];
+        const value = propMatch[ 3 ];
         if (!value) {
           if (additionalProperty) {
             schema.additonalProperties = SchemaHelper.resolveTypeString(key, resolveUnknownObject, originalString, cursor + propMatch.index);
@@ -635,18 +642,18 @@ export class SchemaHelper {
     }
 
     // Try resolve reference type
-    var genericTypes: Schema[] = [];
-    var genericMatch = input.match(REGEX_TYPE_GENERIC);
+    const genericTypes: Schema[] = [];
+    const genericMatch = input.match(REGEX_TYPE_GENERIC);
     if (genericMatch && genericMatch.length == 3) {
       input = genericMatch[1].trim();
-      var genericStrings = genericMatch[2];
+      const genericStrings = genericMatch[ 2 ];
       genericStrings.split(',').forEach(genericString => {
         genericTypes.push(SchemaHelper.resolveTypeString(genericString, resolveUnknownObject, originalString, cursor));
       });
     }
 
     if (input === 'Array') {
-      var genericSchema: Schema;
+      let genericSchema: Schema;
       if (genericTypes.length >= 1) {
         genericSchema = genericTypes[0];
       } else {
@@ -661,7 +668,7 @@ export class SchemaHelper {
     }
 
     if (input === 'Map') {
-      var genericSchema: Schema;
+      let genericSchema: Schema;
       if (genericTypes.length >= 2) {
         genericSchema = genericTypes[1];
       } else {
@@ -683,7 +690,7 @@ export class SchemaHelper {
   }
 
   private static resolveTypeError(msg: string, match: string, originalString: string, cursor: number): Error {
-    var trace = originalString.substr(0, cursor) + "-->" + originalString.substr(cursor);
+    const trace = originalString.substr(0, cursor) + "-->" + originalString.substr(cursor);
     return new Error(msg + ": " + match + " in " + trace);
   }
 
