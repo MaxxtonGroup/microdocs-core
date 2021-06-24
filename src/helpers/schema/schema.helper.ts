@@ -57,7 +57,7 @@ export class SchemaHelper {
           });
         }
         for (const field in schema.properties) {
-          const property = schema.properties[ field ];
+          const property = schema.properties[field];
           let name = field;
           const jsonName = SchemaHelper.resolveReference('mappings.json.name', property);
           const jsonIgnore = SchemaHelper.resolveReference('mappings.json.ignore', property);
@@ -86,7 +86,6 @@ export class SchemaHelper {
           schema[ key ] = newSchema[ key ];
         }
       }
-      else console.log("ROBBBBBBBBBBBBBB " + schema.$ref);
     }
     if (schema.type == SchemaTypes.OBJECT) {
       if (schema.name != undefined) {
@@ -455,13 +454,12 @@ export class SchemaHelper {
    * @return {{}}
    */
   public static removeProperty(object: {}, key: string): {} {
-    let i;
     const segments = key.split(".");
     let currentObject: any = object;
     let currentPath: string = null;
     const objectStack: any = [];
 
-    for (i = 0; i < segments.length; i++) {
+    for (let i = 0; i < segments.length; i++) {
       objectStack.push(currentObject);
       const segment = segments[ i ];
       if (currentPath) {
@@ -484,7 +482,7 @@ export class SchemaHelper {
       }
     }
 
-    for (i = objectStack.length - 1; i >= 0; i--) {
+    for (let i = objectStack.length - 1; i >= 0; i--) {
       if (Object.keys(currentObject).length == 0) {
         if (i > 0) {
           delete objectStack[i - 1][segments[i - 1]];
